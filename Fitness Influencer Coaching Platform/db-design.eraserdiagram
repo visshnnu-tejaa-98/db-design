@@ -1,0 +1,128 @@
+entity-relationship-diagram
+
+user [color: blue] {
+    id string pk
+    first_name varchar(50)
+    last_name varchar(50)
+    phone varchar(10)
+    email varchar(255)
+    password varchar(255)
+    role enum [client, trainer]
+    created_at timestamp
+    updated_at timestamp
+}
+
+client [color: green] {
+    id string pk
+    user_id string fk
+    age number
+    height number
+    weight number
+    fitness_goal varchar(255)
+    created_at timestamp
+    updated_at timestamp
+}
+
+trainer [color: purple] {
+    id string pk
+    user_id string fk
+    experience varchar(50)
+    specilization varchar(100)
+    bio varchar(255)
+    created_at timestamp
+    updated_at timestamp
+}
+
+plan [color: grey] {
+    id string pk
+    trainer_id string fk
+    name varchar(50)
+    description varchar(255)
+    duration_days integer
+    price integer
+    plan_type enum [consultation, monthly, transformation]
+    created_at timestamp
+    updated_at timestamp
+}
+
+subscription [color: blue] {
+    id string pk
+    client_id string fk
+    plan_id string fk
+    start_date date
+    end_date date
+    subscription_status enum [active, expired, cancelled]
+    created_at timestamp
+    updated_at timestamp
+}
+
+session [color: grey] {
+    id string pk
+    client_id string fk
+    trainer_id string fk
+    session_date date
+    session_time time
+    session_type enum [consultation, training, review]
+    session_status enum [scheduled, ongoing, completed, cancelled]
+    created_at timestamp
+    updated_at timestamp
+}
+
+check_in [color: blue] {
+    id string pk
+    client_id string fk
+    subscription_id string fk
+    checkin_date date
+    weight integer
+    comments integer
+    photo_url integer
+    created_at timestamp
+    updated_at timestamp
+}
+
+progress [color:green] {
+    id string pk
+    client_id string fk
+    record_date date
+    weight integer
+    body_fat_percentage integer
+    chest_cm integer
+    waist_cm integer
+    hips_cm integer
+    created_at timestamp
+    updated_at timestamp
+}
+
+payment [color: red] {
+    id string pk
+    client_id string fk
+    subscription_id string fk
+    payment_type enum [upi, card]
+    payment_status enum [success, pending, failed]
+    created_at timestamp
+    updated_at timestamp
+}
+
+trainer_note [color: yellow] {
+    id string pk
+    client_id string fk
+    trainer_id string fk
+    note_text varchar(255)
+    created_at timestamp
+    updated_at timestamp
+}
+
+client.user_id - user.id
+trainer.user_id - user.id
+plan.trainer_id > trainer.id
+subscription.client_id > client.id
+subscription.plan_id > plan.id
+session.client_id  > client.id
+session.trainer_id  > trainer.id
+check_in.client_id > client.id
+check_in.subscription_id > subscription.id
+progress.client_id > client.id
+payment.client_id > client.id
+payment.subscription_id > subscription.id
+trainer_note.client_id > client.id
+trainer_note.trainer_id > trainer.id
