@@ -1,0 +1,105 @@
+entity-relationship-diagram
+customer [color: blue] {
+    id string pk
+    first_name varchar(50)
+    last_name varchar(50)
+    mobile varchar(10)
+    email varchar(255)
+    password varchar(255)
+    address_id string fk
+    created_at timestamp
+    updated_at timestamp
+}
+
+address [color: green] {
+    id serial pk
+    customer_id string fk
+    flat varchar(50)
+    street varchar(150)
+    landmark varchar(150)
+    area varchar(100)
+    city varchar(50)
+    pincode varchar(6)
+    created_at timestamp
+    updated_at timestamp
+}
+
+product [color: yellow] {
+    id string pk
+    name varchar(100) notnull
+    description varchar(255)
+    price number
+    type enum [thrifted, handmade]
+    category_id string fk
+    product_varient_id varchar(50) fk
+    created_at timestamp
+    updated_at timestamp
+}
+
+product_varients [color: red] {
+    id string pk
+    product_id string fk
+    size enum [small, medium, large]
+    color varchar(20)
+    condition enum [new, like_new, used, vintage]
+    created_at timestamp
+    updated_at timestamp
+}
+
+category [color: grey] {
+    id string pk
+    name strin
+}
+
+order [color: green] {
+    id string pk
+    customer_id string fk
+    created_at timestamp
+    updated_at timestamp
+}
+
+order_item [color:pink] {
+    id string pk
+    order_id string fk
+    product_id string fk
+    qty integer
+    price integer
+    created_at timestamp
+    updated_at timestamp
+}
+
+inventory [color: cyan] {
+    id string pk
+    product_id string fk
+    stock number
+    created_at timestamp
+    updated_at timestamp
+}
+
+shipment [color: blue] {
+    id string pk
+    order_id string fk
+    shipment_address string fk
+    created_at timestamp
+    updated_at timestamp
+}
+
+payment [color: green] {
+    id string pk
+    order_id string fk
+    payment_method enum [upi, card]
+    payment_status boolean
+    created_at timestamp
+    updated_at timestamp
+}
+
+
+customer.address_id < address.id
+product.product_varient_id < product_varients.id
+product.category_id < category.id
+order.customer_id < customer.id
+order_item.order_id > order.id
+inventory.product_id > product.id
+shipment.order_id - order.id
+shipment.shipment_address - address.id
+payment.order_id - order.id
