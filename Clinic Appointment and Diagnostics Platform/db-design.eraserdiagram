@@ -1,0 +1,109 @@
+entity-relationship-diagram
+
+user [color: green] {
+    id string pk
+    first_name varchar(50)
+    last_name varchar(50)
+    email varchar(255)
+    password varchar(255)
+    phone varchar(10)
+    role enum [doctor, patient]
+    created_at timestamp
+    updated_at timestamp
+}
+doctor [color: blue] {
+    id string pk
+    user_id string fk
+    speciality_id string fk
+    department varchar(100)
+    experience integer
+    created_at timestamp
+    updated_at timestamp
+}
+
+speciality [color: cyan] {
+    id string pk
+    name varchar(100)
+}
+
+patient [color: blue] {
+    id string pk
+    user_id string fk
+    dob timestamp
+    gender enum [male, female]
+    height integer
+    weight integer
+    blood_pressure varchar(10)
+    address varchar(255)
+    created_at timestamp
+    updated_at timestamp
+}
+
+appointment [color: yellow] {
+    id string pk
+    patient_id string fk
+    doctor_id string fk
+    appointment_date date
+    appointment_start_time time
+    appointment_duration integer
+    appointment_status enum [draft, success]
+    created_at timestamp
+    updated_at timestamp
+}
+
+consultation [color: pink] {
+    id string pk
+    appointment_id string fk
+    patient_id string fk
+    doctor_id string fk
+    consultation_date date
+    diagnosis varchar(255)
+    precription_notes varchar(255)
+}
+
+test [color: yellow] {
+    id string pk
+    name varchar(100)
+    description varchar(255)
+    price integer
+    created_at timestamp
+    updated_at timestamp
+}
+
+consultation_test [color: green] {
+    id string pk
+    consultation_id strinng fk
+    test_id string fk
+    test_status enum [prescribed, completed]
+    created_at timestamp
+    updated_at timestamp
+}
+
+report [color: blue] {
+    id string pk
+    consultation_test_id strinhg fk
+    report_file varchar(255)
+    report_comments varchar(255)
+    created_at timestamp
+    updated_at timestamp
+}
+
+payments [color: blue] {
+    id string pk
+    consultation_id string fk
+    amount integer
+    payment_method enum [upi, card]
+    payment_status enum [pending, canceled, success]
+    created_at timestamp
+    updated_at timestamp
+}
+
+patient.user_id > user.id
+doctor.speciality_id > speciality.id
+doctor.user_id > user.id
+appointment.patient_id  > patient.id
+appointment.doctor_id > doctor.id
+consultation.appointment_id - appointment.id
+consultation_test.consultation_id > consultation.id
+report.consultation_test_id > consultation_test.id
+payments.consultation_id - consultation.id
