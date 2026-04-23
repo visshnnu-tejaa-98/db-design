@@ -1,0 +1,108 @@
+entity-relationship-diagram
+
+building{
+    id string pk
+    building_name varchar(50)
+    address varchar(255)
+    city varchar(50)
+    state varchar(50)
+    country varchar(50)
+    total_floors varchar(10)
+    created_at timestamp
+    updated_at timestamp
+}
+
+floor {
+    id string pk
+    building_id string fk
+    floor_number integer
+    floor_name varchar(100)
+    is_active boolean
+    created_at timestamp
+    updated_at timestamp
+}
+
+elevator_shaft{
+    id string pk
+    building_id string fk
+    shaft_number integer
+    location_description varchar(255)
+    created_at timestamp
+    updated_at timestamp
+}
+
+elevator {
+    id string pk
+    building_id string fk
+    elevator_shaft_id string fk
+    max_weight number
+    capacity number
+    installation_date timestamp
+    created_at timestamp
+    updated_at timestamp
+}
+
+elevator_floor_map{
+    id string pk
+    elevator_id string fk
+    floor_id string fk
+    created_at timestamp
+    updated_at timestamp
+}
+
+floor_request {
+    id string pk
+    building_id string fk
+    source_floor_id string fk
+    destination_floor_id string fk
+    request_time timestamp
+    request_status enum [pending, assigned, completed, cancelled]
+    created_at timestamp
+    updated_at timestamp
+}
+
+ride{
+    id string pk
+    request_id string fk
+    elevator_id string fk
+    assigned_time timestamp
+    start_time timestamp
+    end_time timestamp
+    ride_status enum [assigned, in_progress, completed, failed]
+    created_at timestamp
+    updated_at timestamp
+}
+
+elevator_status_log {
+    id string pk
+    elevator_id string fk
+    status enum [idle, up, down, maintaince, OOS]
+    created_at timestamp
+    updated_at timestamp
+}
+
+maintaince_record{
+    id string pk
+    elevator_id string fk
+    maintaince_type varchar(50)
+    description varchar(255)
+    start_time timestamp
+    end_time timestamp
+    maintaince_status varchar(50)
+    created_at timestamp
+    updated_at timestamp
+}
+
+floor.building_id > building.id
+elevator_shaft.building_id > building.id
+elevator.building_id > building.id
+elevator.elevator_shaft_id - elevator_shaft.id
+elevator_floor_map.elevator_id > elevator.id
+elevator_floor_map.floor_id > floor.id
+floor_request.building_id > building.id
+floor_request.destination_floor_id > floor.id
+floor_request.source_floor_id > floor.id
+ride.elevator_id > elevator.id
+ride.request_id  > floor_request.id
+elevator_status_log.elevator_id > elevator.id
+maintaince_record.elevator_id > elevator.id
