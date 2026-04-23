@@ -1,0 +1,92 @@
+entity-relationship-diagram
+notation chen
+vehicle [color: blue] {
+    id string pk
+    category_id string pk
+    number varchar(10)
+    owner_name varchar(50)
+    mobile varchar(10)
+    created_at timestamp
+    updated_at timestamp
+}
+
+categories [color: pink] {
+    id string pk
+    catergory_type enum [bike, car, suv, cab, ev]
+    created_at timestamp
+    updated_at timestamp
+}
+
+parking_spot_category [color: green] {
+    id string pk
+    category_name varchar(50)
+    descritpion varchar(255)
+    created_at timestamp
+    updated_at timestamp
+}
+
+parking_spot [color: yellow] {
+    id string pk
+    parking_spot_category_id string fk
+    level_id string fk
+    spot_number integer
+    vehicle_category_allowed varchar(20)
+    is_active boolean
+}
+
+parking_zone [color:yellow] {
+    id string pk
+    name string
+    description varchar(255)
+    created_at timestamp
+    updated_at timestamp
+}
+
+parking_level [color: blue] {
+    id string pk
+    zone_id string fk
+    level_number integer
+    created_at timestamp
+    updated_at timestamp
+}
+
+parking_session [color: green] {
+    id string pk
+    vehicle_id string fk
+    spot_id string fk
+    ticket_id string fk
+    entry_time timestamp
+    exit_time timestamp
+    duration integer
+    session_status enum [active, completed]
+    price integer
+    created_at timestamp
+    updated_at timestamp
+}
+
+ticket [color: pink] {
+    id string pk
+    ticket_number varchar(255)
+    ticket_status enum [active,closed]
+    issue_time timestamp
+}
+
+payment [color: cyan] {
+    id string pk
+    parking_session_id string fk
+    price integer
+    payment_time timestamp
+    payment_method enum [upi,card]
+    payment_status enum [success, failed, pending]
+    created_at timestamp
+    updated_at timestamp
+}
+
+vehicle.id < parking_session.vehicle_id
+categories.id < vehicle.category_id
+parking_level.zone_id < parking_zone.id
+parking_spot.level_id > parking_level.id
+parking_spot_category.id < parking_spot.parking_spot_category_id
+parking_session.spot_id > parking_spot.id
+ticket.id - parking_session.ticket_id
+parking_session.id - payment.parking_session_id
